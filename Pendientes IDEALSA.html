@@ -1,0 +1,1722 @@
+```html
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>IDEALSA | Control de Pendientes</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+    background:#f3f6f8;
+    color:#263238;
+}
+
+/* ================= SIDEBAR ================= */
+
+.sidebar{
+    position:fixed;
+    left:0;
+    top:0;
+    width:240px;
+    height:100vh;
+    background:linear-gradient(180deg,#006b54,#004b70);
+    color:white;
+    padding:25px 15px;
+    z-index:10;
+}
+
+.logo{
+    text-align:center;
+    margin-bottom:35px;
+}
+
+.logo h1{
+    font-size:28px;
+    letter-spacing:2px;
+}
+
+.logo p{
+    font-size:12px;
+    opacity:.8;
+    margin-top:5px;
+}
+
+.menu button{
+    width:100%;
+    padding:14px;
+    margin:5px 0;
+    border:0;
+    background:transparent;
+    color:white;
+    text-align:left;
+    border-radius:8px;
+    cursor:pointer;
+    font-size:15px;
+    transition:.2s;
+}
+
+.menu button:hover,
+.menu button.active{
+    background:rgba(255,255,255,.18);
+}
+
+.menu span{
+    margin-right:10px;
+}
+
+/* ================= MAIN ================= */
+
+.main{
+    margin-left:240px;
+    padding:25px;
+}
+
+.topbar{
+    background:white;
+    padding:18px 25px;
+    border-radius:12px;
+    margin-bottom:25px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    box-shadow:0 3px 12px rgba(0,0,0,.06);
+}
+
+.topbar h2{
+    color:#006b54;
+}
+
+.date{
+    color:#777;
+}
+
+/* ================= SECCIONES ================= */
+
+.section{
+    display:none;
+}
+
+.section.active{
+    display:block;
+}
+
+/* ================= CARDS ================= */
+
+.cards{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:18px;
+    margin-bottom:25px;
+}
+
+.card{
+    background:white;
+    padding:22px;
+    border-radius:12px;
+    box-shadow:0 3px 12px rgba(0,0,0,.06);
+}
+
+.card h4{
+    color:#777;
+    font-size:14px;
+    margin-bottom:12px;
+}
+
+.card .number{
+    font-size:32px;
+    font-weight:bold;
+    color:#006b54;
+}
+
+/* ================= TABLAS ================= */
+
+.panel{
+    background:white;
+    border-radius:12px;
+    padding:22px;
+    margin-bottom:25px;
+    box-shadow:0 3px 12px rgba(0,0,0,.06);
+}
+
+.panel-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:20px;
+}
+
+.panel-header h3{
+    color:#004b70;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+th{
+    background:#006b54;
+    color:white;
+    padding:12px;
+    text-align:left;
+}
+
+td{
+    padding:12px;
+    border-bottom:1px solid #eee;
+}
+
+tr:hover{
+    background:#f7faf9;
+}
+
+/* ================= ESTADOS ================= */
+
+.badge{
+    padding:6px 10px;
+    border-radius:20px;
+    font-size:12px;
+    font-weight:bold;
+}
+
+.pendiente{
+    background:#fff3cd;
+    color:#856404;
+}
+
+.completado{
+    background:#d4edda;
+    color:#155724;
+}
+
+.atrasado{
+    background:#f8d7da;
+    color:#721c24;
+}
+
+/* ================= BOTONES ================= */
+
+.btn{
+    border:0;
+    padding:10px 16px;
+    border-radius:7px;
+    cursor:pointer;
+    font-weight:bold;
+}
+
+.btn-primary{
+    background:#006b54;
+    color:white;
+}
+
+.btn-blue{
+    background:#004b70;
+    color:white;
+}
+
+.btn-danger{
+    background:#dc3545;
+    color:white;
+}
+
+.btn:hover{
+    opacity:.85;
+}
+
+/* ================= FORMULARIOS ================= */
+
+.form-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:15px;
+}
+
+.form-group{
+    display:flex;
+    flex-direction:column;
+}
+
+.form-group label{
+    margin-bottom:6px;
+    font-weight:bold;
+    font-size:14px;
+}
+
+input,
+select,
+textarea{
+    padding:11px;
+    border:1px solid #ddd;
+    border-radius:7px;
+    outline:none;
+}
+
+input:focus,
+select:focus,
+textarea:focus{
+    border-color:#006b54;
+}
+
+/* ================= EQUIPO ================= */
+
+.team-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:20px;
+}
+
+.person-card{
+    background:white;
+    border-radius:12px;
+    padding:22px;
+    text-align:center;
+    box-shadow:0 3px 12px rgba(0,0,0,.06);
+}
+
+.avatar{
+    width:65px;
+    height:65px;
+    margin:auto;
+    border-radius:50%;
+    background:linear-gradient(135deg,#006b54,#004b70);
+    color:white;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:23px;
+    font-weight:bold;
+    margin-bottom:12px;
+}
+
+.person-card h3{
+    margin-bottom:5px;
+}
+
+.person-card p{
+    color:#777;
+    margin-bottom:12px;
+}
+
+/* ================= PROGRESO ================= */
+
+.progress{
+    width:100%;
+    height:10px;
+    background:#e5e5e5;
+    border-radius:20px;
+    overflow:hidden;
+}
+
+.progress-bar{
+    height:100%;
+    background:#006b54;
+}
+
+/* ================= MODAL ================= */
+
+.modal{
+    display:none;
+    position:fixed;
+    z-index:100;
+    left:0;
+    top:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,.5);
+    justify-content:center;
+    align-items:center;
+}
+
+.modal-content{
+    background:white;
+    width:90%;
+    max-width:600px;
+    padding:25px;
+    border-radius:12px;
+}
+
+.close{
+    float:right;
+    font-size:25px;
+    cursor:pointer;
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media(max-width:1000px){
+
+    .cards{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .team-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+}
+
+@media(max-width:700px){
+
+    .sidebar{
+        width:70px;
+        padding:15px 8px;
+    }
+
+    .logo h1{
+        font-size:16px;
+    }
+
+    .logo p{
+        display:none;
+    }
+
+    .menu button{
+        font-size:0;
+        text-align:center;
+    }
+
+    .menu span{
+        font-size:20px;
+        margin:0;
+    }
+
+    .main{
+        margin-left:70px;
+        padding:15px;
+    }
+
+    .cards{
+        grid-template-columns:1fr;
+    }
+
+    .team-grid{
+        grid-template-columns:1fr;
+    }
+
+    .form-grid{
+        grid-template-columns:1fr;
+    }
+
+    table{
+        font-size:12px;
+    }
+
+    .topbar{
+        flex-direction:column;
+        align-items:flex-start;
+        gap:8px;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- ================= SIDEBAR ================= -->
+
+<div class="sidebar">
+
+    <div class="logo">
+        <h1>IDEALSA</h1>
+        <p>Control Empresarial</p>
+    </div>
+
+    <div class="menu">
+
+        <button class="active" onclick="mostrarSeccion('dashboard',this)">
+            <span>📊</span> DASHBOARD
+        </button>
+
+        <button onclick="mostrarSeccion('pendientes',this)">
+            <span>📋</span> PENDIENTES
+        </button>
+
+        <button onclick="mostrarSeccion('equipo',this)">
+            <span>👥</span> EQUIPO
+        </button>
+
+        <button onclick="mostrarSeccion('reportes',this)">
+            <span>📈</span> REPORTES
+        </button>
+
+        <button onclick="mostrarSeccion('configuracion',this)">
+            <span>⚙️</span> CONFIGURACIÓN
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- ================= CONTENIDO ================= -->
+
+<div class="main">
+
+    <div class="topbar">
+        <div>
+            <h2 id="tituloPagina">Dashboard</h2>
+            <p>Sistema de control de pendientes</p>
+        </div>
+
+        <div class="date" id="fechaActual"></div>
+    </div>
+
+
+    <!-- ================================================= -->
+    <!-- DASHBOARD -->
+    <!-- ================================================= -->
+
+    <section id="dashboard" class="section active">
+
+        <div class="cards">
+
+            <div class="card">
+                <h4>Total de pendientes</h4>
+                <div class="number" id="totalPendientes">0</div>
+            </div>
+
+            <div class="card">
+                <h4>Pendientes completados</h4>
+                <div class="number" id="totalCompletados">0</div>
+            </div>
+
+            <div class="card">
+                <h4>Pendientes pendientes</h4>
+                <div class="number" id="totalPendientesActivos">0</div>
+            </div>
+
+            <div class="card">
+                <h4>% de cumplimiento</h4>
+                <div class="number" id="porcentajeGeneral">0%</div>
+            </div>
+
+        </div>
+
+
+        <div class="panel">
+
+            <div class="panel-header">
+                <h3>📊 Resumen de proyectos</h3>
+
+                <button class="btn btn-primary"
+                        onclick="abrirModalPendiente()">
+                    + Nuevo pendiente
+                </button>
+            </div>
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>Pendiente</th>
+                        <th>Responsable</th>
+                        <th>Fecha límite</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+
+                <tbody id="dashboardTabla"></tbody>
+
+            </table>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================================================= -->
+    <!-- PENDIENTES -->
+    <!-- ================================================= -->
+
+    <section id="pendientes" class="section">
+
+        <div class="panel">
+
+            <div class="panel-header">
+
+                <h3>📋 Pendientes por persona</h3>
+
+                <button class="btn btn-primary"
+                        onclick="abrirModalPendiente()">
+                    + Agregar pendiente
+                </button>
+
+            </div>
+
+
+            <input
+                type="text"
+                id="buscarPendiente"
+                placeholder="🔎 Buscar pendiente..."
+                onkeyup="mostrarPendientes()"
+                style="width:100%;margin-bottom:20px;"
+            >
+
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>Pendiente</th>
+                        <th>Responsable</th>
+                        <th>Fecha límite</th>
+                        <th>Prioridad</th>
+                        <th>Estado</th>
+                        <th>Acción</th>
+                    </tr>
+                </thead>
+
+                <tbody id="tablaPendientes"></tbody>
+
+            </table>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================================================= -->
+    <!-- EQUIPO -->
+    <!-- ================================================= -->
+
+    <section id="equipo" class="section">
+
+        <div class="panel">
+
+            <div class="panel-header">
+
+                <h3>👥 Mi equipo</h3>
+
+                <button class="btn btn-primary"
+                        onclick="mostrarSeccion('configuracion')">
+                    + Agregar persona
+                </button>
+
+            </div>
+
+            <div class="team-grid" id="teamGrid"></div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================================================= -->
+    <!-- REPORTES -->
+    <!-- ================================================= -->
+
+    <section id="reportes" class="section">
+
+        <div class="panel">
+
+            <div class="panel-header">
+                <h3>📈 Porcentaje de entregas por persona</h3>
+            </div>
+
+            <table>
+
+                <thead>
+
+                    <tr>
+                        <th>Persona</th>
+                        <th>Total pendientes</th>
+                        <th>Completados</th>
+                        <th>Pendientes</th>
+                        <th>% Entregas</th>
+                    </tr>
+
+                </thead>
+
+                <tbody id="tablaReportes"></tbody>
+
+            </table>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================================================= -->
+    <!-- CONFIGURACIÓN -->
+    <!-- ================================================= -->
+
+    <section id="configuracion" class="section">
+
+        <div class="panel">
+
+            <div class="panel-header">
+                <h3>⚙️ Configuración del equipo</h3>
+            </div>
+
+            <div class="form-grid">
+
+                <div class="form-group">
+
+                    <label>Nombre de la persona</label>
+
+                    <input
+                        type="text"
+                        id="nuevoNombre"
+                        placeholder="Ej. Juan Pérez"
+                    >
+
+                </div>
+
+                <div class="form-group">
+
+                    <label>Puesto</label>
+
+                    <input
+                        type="text"
+                        id="nuevoPuesto"
+                        placeholder="Ej. Supervisor"
+                    >
+
+                </div>
+
+            </div>
+
+            <br>
+
+            <button class="btn btn-primary"
+                    onclick="agregarPersona()">
+                + Agregar persona
+            </button>
+
+        </div>
+
+
+        <div class="panel">
+
+            <h3 style="margin-bottom:20px;">
+                Personas registradas
+            </h3>
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Puesto</th>
+                        <th>Acción</th>
+                    </tr>
+                </thead>
+
+                <tbody id="tablaEquipoConfiguracion"></tbody>
+
+            </table>
+
+        </div>
+
+    </section>
+
+</div>
+
+
+<!-- ================================================= -->
+<!-- MODAL NUEVO PENDIENTE -->
+<!-- ================================================= -->
+
+<div class="modal" id="modalPendiente">
+
+    <div class="modal-content">
+
+        <span class="close"
+              onclick="cerrarModal()">
+              &times;
+        </span>
+
+        <h2 style="color:#006b54;margin-bottom:20px;">
+            Nuevo pendiente
+        </h2>
+
+
+        <div class="form-group">
+
+            <label>Nombre del pendiente</label>
+
+            <input
+                type="text"
+                id="nombrePendiente"
+                placeholder="Ej. Entregar reporte mensual"
+            >
+
+        </div>
+
+        <br>
+
+
+        <div class="form-group">
+
+            <label>Responsable</label>
+
+            <select id="responsablePendiente"></select>
+
+        </div>
+
+        <br>
+
+
+        <div class="form-group">
+
+            <label>Fecha límite</label>
+
+            <input
+                type="date"
+                id="fechaPendiente"
+            >
+
+        </div>
+
+        <br>
+
+
+        <div class="form-group">
+
+            <label>Prioridad</label>
+
+            <select id="prioridadPendiente">
+
+                <option value="Baja">Baja</option>
+                <option value="Media" selected>Media</option>
+                <option value="Alta">Alta</option>
+
+            </select>
+
+        </div>
+
+        <br>
+
+
+        <div class="form-group">
+
+            <label>Descripción</label>
+
+            <textarea
+                id="descripcionPendiente"
+                rows="3"
+                placeholder="Descripción del pendiente..."
+            ></textarea>
+
+        </div>
+
+        <br>
+
+
+        <button class="btn btn-primary"
+                onclick="guardarPendiente()">
+            Guardar pendiente
+        </button>
+
+    </div>
+
+</div>
+
+
+<script>
+
+/* =====================================================
+   DATOS INICIALES
+===================================================== */
+
+let personas = JSON.parse(localStorage.getItem("idealsa_personas")) || [
+
+    {
+        id:1,
+        nombre:"Saulo",
+        puesto:"Dirección"
+      },
+
+    {
+        id:2,
+        nombre:"Ángel",
+        puesto:"Arte final"
+    },
+
+    {
+        id:3,
+        nombre:"Fernando",
+        puesto:"Diseño"
+    },
+
+    {
+        id:4,
+        nombre:"Samuel",
+           puesto:"diseño/digital"
+    },
+
+    {
+        id:5,
+        nombre:"César",
+         puesto:"Diseño/digital"
+    },
+
+    {
+        id:6,
+        nombre:"Riverio",
+        puesto:"Contenet manager"
+        },
+{
+id:7,
+nombre:"jorge",
+puesto:"Contenet manager"
+},
+];
+
+
+let pendientes = JSON.parse(
+    localStorage.getItem("idealsa_pendientes")
+) || [];
+
+
+/* =====================================================
+   GUARDAR DATOS
+===================================================== */
+
+function guardarDatos(){
+
+    localStorage.setItem(
+        "idealsa_personas",
+        JSON.stringify(personas)
+    );
+
+    localStorage.setItem(
+        "idealsa_pendientes",
+        JSON.stringify(pendientes)
+    );
+
+}
+
+
+/* =====================================================
+   NAVEGACIÓN
+===================================================== */
+
+function mostrarSeccion(id, boton){
+
+    document.querySelectorAll(".section")
+        .forEach(s => s.classList.remove("active"));
+
+    document.getElementById(id)
+        .classList.add("active");
+
+
+    document.querySelectorAll(".menu button")
+        .forEach(b => b.classList.remove("active"));
+
+    if(boton){
+        boton.classList.add("active");
+    }
+
+
+    const nombres = {
+
+        dashboard:"Dashboard",
+        pendientes:"Pendientes",
+        equipo:"Equipo",
+        reportes:"Reportes",
+        configuracion:"Configuración"
+
+    };
+
+    document.getElementById("tituloPagina")
+        .textContent = nombres[id];
+
+
+    actualizarTodo();
+
+}
+
+
+/* =====================================================
+   FECHA
+===================================================== */
+
+function mostrarFecha(){
+
+    const fecha = new Date();
+
+    document.getElementById("fechaActual")
+        .textContent =
+        fecha.toLocaleDateString(
+            "es-GT",
+            {
+                weekday:"long",
+                year:"numeric",
+                month:"long",
+                day:"numeric"
+            }
+        );
+
+}
+
+mostrarFecha();
+
+
+/* =====================================================
+   DASHBOARD
+===================================================== */
+
+function actualizarDashboard(){
+
+    const total = pendientes.length;
+
+    const completados =
+        pendientes.filter(p => p.estado === "Completado").length;
+
+    const activos = total - completados;
+
+    const porcentaje =
+        total === 0
+        ? 0
+        : Math.round((completados / total) * 100);
+
+
+    document.getElementById("totalPendientes")
+        .textContent = total;
+
+    document.getElementById("totalCompletados")
+        .textContent = completados;
+
+    document.getElementById("totalPendientesActivos")
+        .textContent = activos;
+
+    document.getElementById("porcentajeGeneral")
+        .textContent = porcentaje + "%";
+
+
+    const tabla =
+        document.getElementById("dashboardTabla");
+
+    tabla.innerHTML = "";
+
+
+    pendientes.slice(-8).reverse().forEach(p => {
+
+        tabla.innerHTML += `
+
+        <tr>
+
+            <td>${p.nombre}</td>
+
+            <td>${p.responsable}</td>
+
+            <td>${p.fecha}</td>
+
+            <td>
+                <span class="badge ${
+                    p.estado === "Completado"
+                    ? "completado"
+                    : "pendiente"
+                }">
+
+                ${p.estado}
+
+                </span>
+            </td>
+
+        </tr>
+
+        `;
+
+    });
+
+}
+
+
+/* =====================================================
+   MOSTRAR PENDIENTES
+===================================================== */
+
+function mostrarPendientes(){
+
+    const tabla =
+        document.getElementById("tablaPendientes");
+
+    const busqueda =
+        document.getElementById("buscarPendiente")
+        .value
+        .toLowerCase();
+
+
+    tabla.innerHTML = "";
+
+
+    pendientes
+    .filter(p =>
+        p.nombre.toLowerCase().includes(busqueda) ||
+        p.responsable.toLowerCase().includes(busqueda)
+    )
+    .forEach(p => {
+
+        tabla.innerHTML += `
+
+        <tr>
+
+            <td>
+                <strong>${p.nombre}</strong><br>
+                <small>${p.descripcion || ""}</small>
+            </td>
+
+            <td>${p.responsable}</td>
+
+            <td>${p.fecha}</td>
+
+            <td>${p.prioridad}</td>
+
+            <td>
+
+                <span class="badge ${
+                    p.estado === "Completado"
+                    ? "completado"
+                    : "pendiente"
+                }">
+
+                ${p.estado}
+
+                </span>
+
+            </td>
+
+            <td>
+
+                ${
+                    p.estado !== "Completado"
+                    ?
+
+                    `<button
+                        class="btn btn-primary"
+                        onclick="completarPendiente(${p.id})">
+
+                        ✓ Completar
+
+                    </button>`
+
+                    :
+
+                    `<button
+                        class="btn btn-blue"
+                        onclick="reabrirPendiente(${p.id})">
+
+                        ↩ Reabrir
+
+                    </button>`
+                }
+
+                <button
+                    class="btn btn-danger"
+                    onclick="eliminarPendiente(${p.id})">
+
+                    🗑
+
+                </button>
+
+            </td>
+
+        </tr>
+
+        `;
+
+    });
+
+}
+
+
+/* =====================================================
+   EQUIPO
+===================================================== */
+
+function mostrarEquipo(){
+
+    const grid =
+        document.getElementById("teamGrid");
+
+    grid.innerHTML = "";
+
+
+    personas.forEach(persona => {
+
+        const inicial =
+            persona.nombre
+            .charAt(0)
+            .toUpperCase();
+
+
+        const total =
+            pendientes.filter(
+                p => p.responsable === persona.nombre
+            ).length;
+
+
+        const completados =
+            pendientes.filter(
+                p =>
+                p.responsable === persona.nombre &&
+                p.estado === "Completado"
+            ).length;
+
+
+        const porcentaje =
+            total === 0
+            ? 0
+            : Math.round(
+                (completados / total) * 100
+            );
+
+
+        grid.innerHTML += `
+
+        <div class="person-card">
+
+            <div class="avatar">
+                ${inicial}
+            </div>
+
+            <h3>${persona.nombre}</h3>
+
+            <p>${persona.puesto}</p>
+
+            <strong>
+                ${total} pendientes
+            </strong>
+
+            <br><br>
+
+            <div class="progress">
+
+                <div
+                    class="progress-bar"
+                    style="width:${porcentaje}%">
+                </div>
+
+            </div>
+
+            <small>
+                ${porcentaje}% completado
+            </small>
+
+        </div>
+
+        `;
+
+    });
+
+}
+
+
+/* =====================================================
+   REPORTES
+===================================================== */
+
+function mostrarReportes(){
+
+    const tabla =
+        document.getElementById("tablaReportes");
+
+    tabla.innerHTML = "";
+
+
+    personas.forEach(persona => {
+
+        const total =
+            pendientes.filter(
+                p => p.responsable === persona.nombre
+            ).length;
+
+
+        const completados =
+            pendientes.filter(
+                p =>
+                p.responsable === persona.nombre &&
+                p.estado === "Completado"
+            ).length;
+
+
+        const pendientesActivos =
+            total - completados;
+
+
+        const porcentaje =
+            total === 0
+            ? 0
+            : Math.round(
+                (completados / total) * 100
+            );
+
+
+        tabla.innerHTML += `
+
+        <tr>
+
+            <td>
+                <strong>${persona.nombre}</strong>
+            </td>
+
+            <td>${total}</td>
+
+            <td>${completados}</td>
+
+            <td>${pendientesActivos}</td>
+
+            <td style="min-width:180px;">
+
+                <strong>${porcentaje}%</strong>
+
+                <div class="progress">
+
+                    <div
+                        class="progress-bar"
+                        style="width:${porcentaje}%">
+                    </div>
+
+                </div>
+
+            </td>
+
+        </tr>
+
+        `;
+
+    });
+
+}
+
+
+/* =====================================================
+   CONFIGURACIÓN
+===================================================== */
+
+function mostrarConfiguracion(){
+
+    const tabla =
+        document.getElementById(
+            "tablaEquipoConfiguracion"
+        );
+
+    tabla.innerHTML = "";
+
+
+    personas.forEach(persona => {
+
+        tabla.innerHTML += `
+
+        <tr>
+
+            <td>${persona.nombre}</td>
+
+            <td>${persona.puesto}</td>
+
+            <td>
+
+                <button
+                    class="btn btn-danger"
+                    onclick="eliminarPersona(${persona.id})">
+
+                    🗑 Eliminar
+
+                </button>
+
+            </td>
+
+        </tr>
+
+        `;
+
+    });
+
+
+    actualizarSelectPersonas();
+
+}
+
+
+/* =====================================================
+   AGREGAR PERSONA
+===================================================== */
+
+function agregarPersona(){
+
+    const nombre =
+        document.getElementById("nuevoNombre")
+        .value.trim();
+
+    const puesto =
+        document.getElementById("nuevoPuesto")
+        .value.trim();
+
+
+    if(!nombre){
+
+        alert("Escribe el nombre de la persona.");
+
+        return;
+
+    }
+
+
+    personas.push({
+
+        id:Date.now(),
+
+        nombre:nombre,
+
+        puesto:puesto || "Colaborador"
+
+    });
+
+
+    guardarDatos();
+
+    document.getElementById("nuevoNombre").value = "";
+
+    document.getElementById("nuevoPuesto").value = "";
+
+
+    actualizarTodo();
+
+    alert("Persona agregada correctamente.");
+
+}
+
+
+/* =====================================================
+   ELIMINAR PERSONA
+===================================================== */
+
+function eliminarPersona(id){
+
+    const persona =
+        personas.find(p => p.id === id);
+
+
+    if(!persona) return;
+
+
+    const tienePendientes =
+        pendientes.some(
+            p => p.responsable === persona.nombre
+        );
+
+
+    if(tienePendientes){
+
+        alert(
+            "No puedes eliminar esta persona porque tiene pendientes asignados."
+        );
+
+        return;
+
+    }
+
+
+    if(confirm(
+        "¿Deseas eliminar a " +
+        persona.nombre +
+        "?"
+    )){
+
+        personas =
+            personas.filter(
+                p => p.id !== id
+            );
+
+        guardarDatos();
+
+        actualizarTodo();
+
+    }
+
+}
+
+
+/* =====================================================
+   SELECT PERSONAS
+===================================================== */
+
+function actualizarSelectPersonas(){
+
+    const select =
+        document.getElementById(
+            "responsablePendiente"
+        );
+
+
+    select.innerHTML = "";
+
+
+    personas.forEach(persona => {
+
+        select.innerHTML += `
+
+        <option value="${persona.nombre}">
+            ${persona.nombre}
+        </option>
+
+        `;
+
+    });
+
+}
+
+
+/* =====================================================
+   MODAL
+===================================================== */
+
+function abrirModalPendiente(){
+
+    actualizarSelectPersonas();
+
+    document.getElementById(
+        "modalPendiente"
+    ).style.display = "flex";
+
+}
+
+
+function cerrarModal(){
+
+    document.getElementById(
+        "modalPendiente"
+    ).style.display = "none";
+
+}
+
+
+/* =====================================================
+   GUARDAR PENDIENTE
+===================================================== */
+
+function guardarPendiente(){
+
+    const nombre =
+        document.getElementById(
+            "nombrePendiente"
+        ).value.trim();
+
+
+    const responsable =
+        document.getElementById(
+            "responsablePendiente"
+        ).value;
+
+
+    const fecha =
+        document.getElementById(
+            "fechaPendiente"
+        ).value;
+
+
+    const prioridad =
+        document.getElementById(
+            "prioridadPendiente"
+        ).value;
+
+
+    const descripcion =
+        document.getElementById(
+            "descripcionPendiente"
+        ).value.trim();
+
+
+    if(!nombre || !responsable || !fecha){
+
+        alert(
+            "Completa el nombre, responsable y fecha."
+        );
+
+        return;
+
+    }
+
+
+    pendientes.push({
+
+        id:Date.now(),
+
+        nombre:nombre,
+
+        responsable:responsable,
+
+        fecha:fecha,
+
+        prioridad:prioridad,
+
+        descripcion:descripcion,
+
+        estado:"Pendiente"
+
+    });
+
+
+    guardarDatos();
+
+    cerrarModal();
+
+    limpiarFormulario();
+
+    actualizarTodo();
+
+
+    alert(
+        "Pendiente asignado correctamente a " +
+        responsable
+    );
+
+}
+
+
+/* =====================================================
+   COMPLETAR PENDIENTE
+===================================================== */
+
+function completarPendiente(id){
+
+    const pendiente =
+        pendientes.find(
+            p => p.id === id
+        );
+
+
+    if(pendiente){
+
+        pendiente.estado =
+            "Completado";
+
+        guardarDatos();
+
+        actualizarTodo();
+
+    }
+
+}
+
+
+/* =====================================================
+   REABRIR PENDIENTE
+===================================================== */
+
+function reabrirPendiente(id){
+
+    const pendiente =
+        pendientes.find(
+            p => p.id === id
+        );
+
+
+    if(pendiente){
+
+        pendiente.estado =
+            "Pendiente";
+
+        guardarDatos();
+
+        actualizarTodo();
+
+    }
+
+}
+
+
+/* =====================================================
+   ELIMINAR PENDIENTE
+===================================================== */
+
+function eliminarPendiente(id){
+
+    if(!confirm(
+        "¿Deseas eliminar este pendiente?"
+    )) return;
+
+
+    pendientes =
+        pendientes.filter(
+            p => p.id !== id
+        );
+
+
+    guardarDatos();
+
+    actualizarTodo();
+
+}
+
+
+/* =====================================================
+   LIMPIAR FORMULARIO
+===================================================== */
+
+function limpiarFormulario(){
+
+    document.getElementById(
+        "nombrePendiente"
+    ).value = "";
+
+    document.getElementById(
+        "fechaPendiente"
+    ).value = "";
+
+    document.getElementById(
+        "descripcionPendiente"
+    ).value = "";
+
+}
+
+
+/* =====================================================
+   ACTUALIZAR TODO
+===================================================== */
+
+function actualizarTodo(){
+
+    actualizarDashboard();
+
+    mostrarPendientes();
+
+    mostrarEquipo();
+
+    mostrarReportes();
+
+    mostrarConfiguracion();
+
+}
+
+
+actualizarTodo();
+
+
+/* =====================================================
+   CERRAR MODAL AL HACER CLICK AFUERA
+===================================================== */
+
+window.onclick = function(event){
+
+    const modal =
+        document.getElementById(
+            "modalPendiente"
+        );
+
+
+    if(event.target === modal){
+
+        cerrarModal();
+
+    }
+
+};
+
+</script>
+
+</body>
+</html>
+```
